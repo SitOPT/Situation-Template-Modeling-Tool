@@ -17,7 +17,7 @@ function validate() {
         // Condition -> (Condition | Situation)
         // Operation -> Condition
         // Context -> (Operation | Situation)
-        if (start.startsWith("Condition") && !end.startsWith("Operation")) {
+        if (start.startsWith("Condition") && !end.startsWith("Operation") && !end.startsWith("Situation")) {
             errors.push("Illegal Connection: " + $("#" + start).text() + " -> " + $("#" + end).text())
         } else if (start.startsWith("Operation") && !(end.startsWith("Operation") || end.startsWith("Situation"))) {
             errors.push("Illegal Connection: " + $("#" + start).text() + " -> " + $("#" + end).text())
@@ -29,6 +29,8 @@ function validate() {
     var draggables = $(".ui-draggable");
 
     // iterate over all nodes
+    var operations = 0;
+    var conditions = 0;
     for (var i = 0; i < draggables.length; i++) {
         var drag = draggables[i];
         if ($(drag).hasClass("ui-droppable") || $(drag).hasClass("unselectable")) {
@@ -40,12 +42,17 @@ function validate() {
         if (id.startsWith("Situation")) {
             errors = validateSituation(id, div, starts, ends, errors);
         } else if (id.startsWith("Operation")) {
+            operations++;
             errors = validateOperation(id, div, starts, ends, errors);
         } else if (id.startsWith("Condition")) {
+            conditions++;
             errors = validateCondition(id, div, starts, ends, errors);
         } else if (id.startsWith("Context")) {
             errors = validateContext(id, div, starts, ends, errors);
         }
+    }
+    if (operations === 0 && conditions > 1) {
+        errors.push("OperationNodes are only omittable if there is only one ConditionNode.");
     }
     recognizeCycles(errors);
     var message = "";
