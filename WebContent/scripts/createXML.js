@@ -89,9 +89,9 @@ function getSituationTemplateAsXML(templateName) {
         id = $(context).attr("id");
 
         var contextName = $("#" + id + " div").attr("contextname");
-        var sensorType = $("#" + id + " div").attr("sensortype");
-        var measureName = $("#" + id + " div").attr("sensorunit");
         var inputtype = $("#" + id + ' div').attr('inputtype');
+        var sensorType = inputtype == "sensor" ? $("#" + id + " div").attr("sensortype") : $("#" + id + " div").attr("contextthing");
+        var measureName = inputtype == "sensor" ? $("#" + id + " div").attr("sensorunit") : $("#" + id + " div").attr("contextrmp");
 
         xmlw.writeStartElement("contextNode");
         xmlw.writeAttributeString("id", id);

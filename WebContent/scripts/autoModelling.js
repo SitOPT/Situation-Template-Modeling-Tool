@@ -171,10 +171,18 @@ function parseAndTraverseXML(contents) {
 
         // create div, which saves the properties of a node
         $(propDiv).hide();
-        propDiv.setAttribute("contextname", $(context).attr("name"));
-        propDiv.setAttribute("sensortype", $(context).attr("type"));
-        propDiv.setAttribute("sensorunit", $(context).xpath("measureName").text());
-        propDiv.setAttribute("inputtype", $(context).xpath("inputType").text());
+        var inputtype = $(context).xpath("inputType").text();
+        if (inputtype == "sensor") {
+            propDiv.setAttribute("contextname", $(context).attr("name"));
+            propDiv.setAttribute("sensortype", $(context).attr("type"));
+            propDiv.setAttribute("sensorunit", $(context).xpath("measureName").text());
+            propDiv.setAttribute("inputtype", $(context).xpath("inputType").text());
+        } else if (inputtype == "static") {
+            propDiv.setAttribute("contextname", $(context).attr("name"));
+            propDiv.setAttribute("contextthing", $(context).attr("type"));
+            propDiv.setAttribute("contextRMP", $(context).xpath("measureName").text());
+            propDiv.setAttribute("inputtype", $(context).xpath("inputType").text());
+        }
         $(div).text($(context).attr("name"));
         var count = parseInt($(context).attr("id").match(/\d+$/));
         // set the amount of situations to hte highest index of conditions.

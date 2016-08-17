@@ -158,35 +158,45 @@
                 <br>
                 Context:<br>
 
-                <input type="text" id="contextType" />
+                <input type="text" id="contextname" />
                 <br> <br>
+                <div id="staticContext" class="hidden">
+                    <div class="form-group">
+                        <label for="contextThing">Thing:</label>
+                        <input type="text" id="contextThing"><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="contextRMP">RMP-URL:</label>
+                        <input type="text" id="contextRMP"><br>
+                    </div>
+                </div>
                 <!-- Sensor Types -->
-                <div class="form-group">
-                    <label for="sensorType">SensorType:</label>
-                    <select class="form-control" id="sensorType" onchange="configureDropDownLists(this,document.getElementById('unit'));">
-                        <option> </option>
-                        <!-- Code to auto populate the sensor list from array -->
-                        <script type="text/javascript" src="scripts/sensorArray.js"></script>
-                    </select>
-                </div>
-                <br>
-                <!-- Sensor Units -->
-                <div class="form-group" id="senUnit">
+                <div id="sensorContext">
+                    <div class="form-group">
+                        <label for="sensorType">SensorType:</label>
+                        <select class="form-control" id="sensorType" onchange="configureDropDownLists(this,document.getElementById('unit'));">
+                            <option> </option>
+                            <!-- Code to auto populate the sensor list from array -->
+                            <script type="text/javascript" src="scripts/sensorArray.js"></script>
+                        </select>
+                    </div>
                     <br>
-                    <label for="unit">Unit:</label>
-                    <select class="form-control" id="unit">
-                    </select>
+                    <!-- Sensor Units -->
+                    <div class="form-group" id="senUnit">
+                        <br>
+                        <label for="unit">Unit:</label>
+                        <select class="form-control" id="unit">
+                        </select>
+                    </div>
+                    <br>
                 </div>
-                <br>
                 <!-- Input Type -->
                 <div class="form-group" id="intype">
-                    <br>
                     <label for="inputtype">Input Type:</label>
-                    <select class="form-control" id="inputtype">
+                    <select class="form-control" id="inputtype" onchange="switchStaticSensor(this);">
                         <option></option>
                         <option>Sensor</option>
-                        <option>Situation</option>
-                        <option>Static Context</option>
+                        <option>Static</option>
                     </select>
                 </div>
                 <button type="button" id="contextButton" class="saveButton">save</button>
@@ -313,6 +323,17 @@
             $("#contextForm").addClass("hidden");
             $("#conditionForm").addClass("hidden");
             // Set the situation Nodecounter to null when clearAll is executed
+        }
+
+        function switchStaticSensor(select) {
+            var value = select.value;
+            if (value === 'Static') {
+                $('#sensorContext').hide();
+                $('#staticContext').show();
+            } else if (value === 'Sensor') {
+                $('#sensorContext').show();
+                $('#staticContext').hide();
+            }
         }
     </script>
 

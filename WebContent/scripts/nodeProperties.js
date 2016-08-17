@@ -125,11 +125,11 @@ $(document).ready(function(){
                     document.getElementById("operator").value = fieldProperties[i].value;
                     createNewValueField(document.getElementById("operator"));
                 } else if (fieldProperties[i].name == "sensorvalue") {
-                    document.getElementById("value").value = fieldProperties[i].value;
+                    document.getElementById("value").value = fieldProperties[i].value.trim();
                 } else if (fieldProperties[i].name == "sensorsecondvalue") {
                     var elem = document.getElementById("secondValue");
                     if(typeof elem !== 'undefined' && elem !== null) {
-                        document.getElementById("secondValue").value = fieldProperties[i].value;
+                        document.getElementById("secondValue").value = fieldProperties[i].value.trim();
                     }
                 }
             }
@@ -181,21 +181,33 @@ $(document).ready(function(){
 
 
             for (var i = 0; i < fieldProperties.length; i++) {
-                if (fieldProperties[i].name == "contextname") {
-                    document.getElementById("contextType").value = fieldProperties[i].value;
-                } else if (fieldProperties[i].name == "sensortype") {
+                if (fieldProperties[i].name == "sensortype") {
                     document.getElementById("sensorType").value = fieldProperties[i].value;
                     configureDropDownLists(document.getElementById("sensorType"), document.getElementById('unit'));
                 } else if (fieldProperties[i].name == "sensorunit") {
                     document.getElementById("unit").value = fieldProperties[i].value;
+                } else if (fieldProperties[i].name == "sensortype") {
+                    document.getElementById("sensorType").value = fieldProperties[i].value;
+                } else if (fieldProperties[i].name == "contextname") {
+                    document.getElementById("contextname").value = fieldProperties[i].value;
+                } else if (fieldProperties[i].name == "contextthing") {
+                    document.getElementById("contextThing").value = fieldProperties[i].value;
+                } else if (fieldProperties[i].name == "contextrmp") {
+                    document.getElementById("contextRMP").value = fieldProperties[i].value;
+                } else if (fieldProperties[i].name == "inputtype") {
+                    var inputtype = fieldProperties[i].value;
+                    document.getElementById("inputtype").value = inputtype[0].toUpperCase() + inputtype.substr(1);
+                    switchStaticSensor(document.getElementById("inputtype"));
                 }
             }
 
             // Code to process save button click on the form
             $("#contextButton").click(function() {
-                var contextVal = $("#contextType").val();
+                var contextVal = $("#contextname").val();
                 var senTyp = $("#sensorType").val();
                 var unit = $("#unit").val();
+                var thing = $("#contextThing").val();
+                var rmp = $("#contextRMP").val();
                 var inputtype = $('#inputtype').val();
                 unit = unit == null ? "" : unit;
 
@@ -207,15 +219,19 @@ $(document).ready(function(){
 
                 var source = $(selected).attr("source");
                 selected.childNodes[0].nodeValue = contextVal;
+                console.log(contextVal);
 
                 properties = selected.children[0];
-                properties.setAttribute("contextName", contextVal);
-                properties.setAttribute("sensortype", senTyp);
-                properties.setAttribute("sensorunit", unit);
-                if (inputtype.toLowerCase() == 'static context') {
+                if (inputtype.toLowerCase() == 'sensor') {
+                    properties.setAttribute("contextName", contextVal);
+                    properties.setAttribute("sensortype", senTyp);
+                    properties.setAttribute("sensorunit", unit);
+                    properties.setAttribute('inputtype', 'sensor');
+                } else if (inputtype.toLowerCase() == 'static') {
+                    properties.setAttribute("contextName", contextVal);
+                    properties.setAttribute("contextThing", thing);
+                    properties.setAttribute("contextRMP", rmp);
                     properties.setAttribute('inputtype', 'static');
-                } else {
-                    properties.setAttribute('inputtype', inputtype.toLowerCase());
                 }
 
                 $("#contextForm").addClass("hidden");

@@ -212,24 +212,34 @@ function validateCondition(id, div, starts, ends, errors) {
  * @returns {*}
  */
 function validateContext(id, div, starts, ends, errors) {
-    var name = div.getAttribute("contextname");
-    var type = div.getAttribute("sensortype");
-    var unit = div.getAttribute("sensorunit");
-    var inputtype = div.getAttribute('inputtype');
-    var inputtypevalues = ['sensor', 'situation', 'static'];
+    if (div.getAttribute("inputtype") === "sensor") {
+        var name = div.getAttribute("contextname");
+        var type = div.getAttribute("sensortype");
+        var unit = div.getAttribute("sensorunit");
 
-    if (name == null || name == "") {
-        errors.push("At least one context does not have a name");
-    } else if (type == null || type == "") {
-        errors.push("Context " + name + " does not have a type");
-    } else if (unit == null || unit == "") {
-        errors.push("Context " + name + " does not have a unit");
-    } else if (starts.indexOf(id) == -1) {
-        errors.push("Context " + name + " is never used");
-    } else if (inputtype == null || inputtype == '') {
-        errors.push('Context ' + name + ' has no input type');
-    } else if (inputtypevalues.indexOf(inputtype) == -1) {
-        errors.push('Context ' + name + ' has invalid input type');
+        if (name == null || name == "") {
+            errors.push("At least one context does not have a name");
+        } else if (type == null || type == "") {
+            errors.push("Context " + name + " does not have a type");
+        } else if (unit == null || unit == "") {
+            errors.push("Context " + name + " does not have a unit");
+        } else if (starts.indexOf(id) == -1) {
+            errors.push("Context " + name + " is never used");
+        }
+    } else if (div.getAttribute("inputtype") === "static") {
+        var name = div.getAttribute('contextname');
+        var thing = div.getAttribute('contextThing');
+        var rmp = div.getAttribute('contextRMP');
+
+        if (name == null || name == "") {
+            errors.push("At least one context does not have a name");
+        } else if (thing == null || thing == "") {
+            errors.push("Context " + name + ' does not have a thing');
+        } else if (rmp == null || rmp == "") {
+            errors.push("Context " + name + " does not have an RMP-URL");
+        }
+    } else {
+        errors.push("At least one context does not have an input type.");
     }
     return errors;
 }
