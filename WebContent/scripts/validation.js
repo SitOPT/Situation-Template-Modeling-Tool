@@ -55,11 +55,16 @@ function validate() {
         errors.push("OperationNodes are only omittable if there is only one ConditionNode.");
     }
     recognizeCycles(errors);
-    var message = "";
-    for (var i = 0; i < errors.length; i++) {
-        message += errors[i] + "<br/>";
+    if (errors.length > 0) {
+        var message = "<span style='color:#ff0000'>";
+        for (var i = 0; i < errors.length; i++) {
+            message += errors[i] + "<br/>";
+        }
+        message = message.substr(0, message.length - 5);
+        message += "</span>";
+    } else {
+        message = "<span style='color:#00ff00'>No Errors</span>"
     }
-    message = message.substr(0, message.length - 5);
     $("#errors").html(message);
     $("#errors").show();
     return errors.length == 0;

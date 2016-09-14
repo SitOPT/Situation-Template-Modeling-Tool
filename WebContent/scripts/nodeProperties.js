@@ -4,6 +4,7 @@ $(document).ready(function(){
     var selectedNode = null;
     var properties = null;
     var fieldProperties = null;
+    var allowedRegex = /^([a-zA-Z0-9]([a-zA-Z0-9.]*[a-zA-Z0-9])?)?$/;
 
     $(".drawingArea").on("click", ".nodeTemplateSituation, .nodeTemplateOperation, .nodeTemplateContext, .nodeTemplateCondition", function() {
 
@@ -47,13 +48,17 @@ $(document).ready(function(){
             $("#sitButton").click(function() {
 
                 var sitVal = $("#sitType").val();
+                if (!(allowedRegex.test(sitVal))) {
+                    alert("Please make sure that all values consist of alphanumeric characters or '.'.\nThe first and the last character are not allowed to be '.'");
+                    return;
+                }
 
                 // Code to save the Node properties in hidden div
                 selected = $(".selected")[0];
 
                 // Code to Change the name of the node to user entered name
                 var source = $(selected).attr("source");
-                selected.childNodes[0].nodeValue = sitVal;
+                selected.innerHTML = sitVal + "<div id='propertyDiv'/><span style='font-size:75%'>(Situation Node)</span>";
 
                 properties = selected.children[0];
                 properties.setAttribute("sitvalue", sitVal);
@@ -78,22 +83,27 @@ $(document).ready(function(){
             var name = $(selectedNode).attr("oprname");
             var type = $(selectedNode).attr("oprvalue");
             var neg = $(selectedNode).attr("oprnegated");
-            document.getElementById("oprName").value = name == undefined || name === "undefined" ? "" : name;
+
             document.getElementById("oprType").value = type == undefined || type === "undefined" ? "" : type;
             document.getElementById("oprNegated").value = neg == undefined || neg === "undefined" ? "" : neg;
+            document.getElementById("oprName").value = name == undefined || name === "undefined" ? "" : name;
 
             // Code to process save button click on the form
             $("#oprButton").click(function() {
                 var oprVal = $("#oprType").val();
                 var oprName = $("#oprName").val();
                 var negated = $("#oprNegated").val();
+                if (!(allowedRegex.test(oprVal) && allowedRegex.test(oprName) && allowedRegex.test(negated))) {
+                    alert("Please make sure that all values consist of alphanumeric characters or '.'.\nThe first and the last character are not allowed to be '.'");
+                    return;
+                }
 
                 // Code to save the operator properties in hidden div
                 selected = $(".selected")[0];
 
                 // Code to Change the name of the node to user entered name
                 var source = $(selected).attr("source");
-                selected.childNodes[0].nodeValue = oprName;
+                selected.innerHTML = oprName + "<div id='propertyDiv'/><span style='font-size:75%'>(Operation Node)</span>";
 
                 properties = selected.children[0];
                 properties.setAttribute("oprname", oprName);
@@ -146,6 +156,10 @@ $(document).ready(function(){
                     $("#errors").html("Please enter a number as number of intervals.");
                     return;
                 }
+                if (!(allowedRegex.test(conditionVal) && allowedRegex.test(opr) && allowedRegex.test(val) && allowedRegex.test(secVal))) {
+                    alert("Please make sure that all values consist of alphanumeric characters or '.'.\nThe first and the last character are not allowed to be '.'");
+                    return;
+                }
 
                 // Code to populate the hidden div when user saves the filled in form
                 selected = $(".selected")[0];
@@ -153,7 +167,7 @@ $(document).ready(function(){
                 // Code to Change the name of the node to user entered name
 
                 var source = $(selected).attr("source");
-                selected.childNodes[0].nodeValue = conditionVal;
+                selected.innerHTML = conditionVal + "<div id='propertyDiv'/><span style='font-size:75%'>(Condition Node)</span>";
 
                 properties = selected.children[0];
                 properties.setAttribute("conditionname", conditionVal);
@@ -210,6 +224,11 @@ $(document).ready(function(){
                 var rmp = $("#contextRMP").val();
                 var inputtype = $('#inputtype').val();
                 unit = unit == null ? "" : unit;
+                if (!(allowedRegex.test(contextVal) && allowedRegex.test(senTyp) && allowedRegex.test(unit) && allowedRegex.test(thing)
+                    && allowedRegex.test(rmp) && allowedRegex.test(inputtype))) {
+                    alert("Please make sure that all values consist of alphanumeric characters or '.'.\nThe first and the last character are not allowed to be '.'");
+                    return;
+                }
 
 
                 // Code to populate the hidden div when user saves the filled in form
@@ -218,11 +237,10 @@ $(document).ready(function(){
                 // Code to Change the name of the node to user entered name
 
                 var source = $(selected).attr("source");
-                selected.childNodes[0].nodeValue = contextVal;
-                console.log(contextVal);
+                selected.innerHTML = contextVal + "<div id='propertyDiv'/><span style='font-size:75%'>(Context Node)</span>";
 
                 properties = selected.children[0];
-                if (inputtype.toLowerCase() == 'sensor') {
+                if (inputtype.toLowerCase() == 'sensor' || inputtype == '') {
                     properties.setAttribute("contextName", contextVal);
                     properties.setAttribute("sensortype", senTyp);
                     properties.setAttribute("sensorunit", unit);

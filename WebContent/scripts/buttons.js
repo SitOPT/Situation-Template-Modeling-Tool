@@ -37,7 +37,7 @@ function load() {
 
 function save() {
 
-    var savename = prompt("Unter welchem Namen soll das Template gespeichert werden?", "Unbenannt");
+    var savename = prompt("Under which name should the template be saved?", "NoName");
 
     if (savename == "") {
         alert("Geben sie einen Namen ein!");
@@ -83,10 +83,10 @@ function startRec() {
         return;
     }
 
-    var name = prompt("Unter welchen Namen soll das Template gespeichert werden?", "Unbenannt");
+    var name = prompt("Under which name should the template be saved?", "NoName");
     while (name === "") {
-        alert("Geben Sie einen Namen ein");
-        name = prompt("Unter welchen Namen soll das Template gespeichert werden?", "Unbenannt");
+        alert("Please give a name");
+        name = prompt("Under which name should the template be saved?", "NoName");
     }
     var contexts = $("[type='contextnode']").not(".hidden");
     var mapping = new Array(contexts.length);
@@ -132,10 +132,10 @@ function exportXML() {
         return;
     }
 
-    var exportname = prompt("Unter welchem Namen soll das Template exportiert werden?", "Unbenannt");
+    var exportname = prompt("Under which name should the template be exported?", "NoName");
 
-    if (exportname == "") {
-        alert("Geben sie einen Namen ein!");
+    if (exportname == "" || exportname == "null") {
+        alert("Please give a name!");
     } else {
         //Saving xml file locally
         var sitTemplateString = getSituationTemplateAsXML(exportname);
