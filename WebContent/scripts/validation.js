@@ -21,7 +21,9 @@ function validate() {
             errors.push("Illegal Connection: " + $("#" + start).text() + " -> " + $("#" + end).text())
         } else if (start.startsWith("Operation") && !(end.startsWith("Operation") || end.startsWith("Situation"))) {
             errors.push("Illegal Connection: " + $("#" + start).text() + " -> " + $("#" + end).text())
-        } else if (start.startsWith("Context") && !end.startsWith("Condition")) {
+        } else if ((start.startsWith("Context") && !end.startsWith("Condition") && $("#" + start).children()[0].getAttribute("inputtype") != "situation")
+            || ((!end.startsWith("Operation") && !end.startsWith("Situation")) && start.startsWith("Context") && $("#" + start).children()[0].getAttribute("inputtype") == "situation")) {
+            console.log(start + " -> " + end + " | " + $("#" + start).children()[0].getAttribute("inputtype"));
             errors.push("Illegal Connection: " + $("#" + start).text() + " -> " + $("#" + end).text())
         }
     }
@@ -242,6 +244,18 @@ function validateContext(id, div, starts, ends, errors) {
             errors.push("Context " + name + ' does not have a thing');
         } else if (rmp == null || rmp == "") {
             errors.push("Context " + name + " does not have an RMP-URL");
+        }
+    } else if (div.getAttribute("inputtype") === "situation") {
+        var template = div.getAttribute("contextname");
+        var thing = div.getAttribute("situationThing");
+        var rmp = div.getAttribute("situationRmp");
+
+        if (template == null || template == "") {
+            errors.push("At least one situation context does not have a template");
+        } else if (thing == null || thing == "") {
+            errors.push("At least one context does not have a thing");
+        } else if (rmp == null || rmp == "") {
+            errors.push("Context " + thing + "." + template + " does not have an RMP");
         }
     } else {
         errors.push("At least one context does not have an input type.");

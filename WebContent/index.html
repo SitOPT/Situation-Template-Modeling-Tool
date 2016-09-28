@@ -156,11 +156,11 @@
         <div id="contextForm" class="hidden nodeForm">
             <form role="form">
                 <br>
-                Sensor Name:<br>
-
-                <input type="text" id="contextname" />
-                <br> <br>
                 <div id="staticContext" class="hidden">
+                    Sensor Name:<br>
+
+                    <input type="text" id="staticSensor" />
+                    <br> <br>
                     <div class="form-group">
                         <label for="contextThing">Thing:</label>
                         <input type="text" id="contextThing"><br>
@@ -172,6 +172,10 @@
                 </div>
                 <!-- Sensor Types -->
                 <div id="sensorContext">
+                    Sensor Name:<br>
+
+                    <input type="text" id="contextSensor" />
+                    <br> <br>
                     <div class="form-group">
                         <label for="sensorType">SensorType:</label>
                         <select class="form-control" id="sensorType" onchange="configureDropDownLists(this,document.getElementById('unit'));">
@@ -190,6 +194,21 @@
                     </div>
                     <br>
                 </div>
+
+                <div id="situationContext" class="hidden">
+                    <div class="form-group">
+                        <label for="situationTemplate">SituationTemplate:</label>
+                        <input type="text" class="form-control" id="situationTemplate" />
+                        <br>
+                        <label for="situationThing">Thing:</label>
+                        <input type="text" class="form-control" id="situationThing" />
+                        <br>
+                        <label for="situationRmp">RMP-URL:</label>
+                        <input type="text" class="form-control" id="situationRmp" />
+                    </div>
+                    <br>
+                    <br>
+                </div>
                 <!-- Input Type -->
                 <div class="form-group" id="intype">
                     <label for="inputtype">Input Type:</label>
@@ -197,6 +216,7 @@
                         <option></option>
                         <option>Sensor</option>
                         <option>Static</option>
+                        <option>Situation</option>
                     </select>
                 </div>
                 <button type="button" id="contextButton" class="saveButton">save</button>
@@ -330,9 +350,15 @@
             if (value === 'Static') {
                 $('#sensorContext').hide();
                 $('#staticContext').show();
+                $('#situationContext').hide();
             } else if (value === 'Sensor') {
                 $('#sensorContext').show();
                 $('#staticContext').hide();
+                $('#situationContext').hide();
+            } else if (value === 'Situation') {
+                $('#sensorContext').hide();
+                $('#staticContext').hide();
+                $('#situationContext').show();
             }
         }
     </script>

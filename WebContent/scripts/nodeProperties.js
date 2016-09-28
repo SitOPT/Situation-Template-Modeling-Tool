@@ -5,6 +5,7 @@ $(document).ready(function(){
     var properties = null;
     var fieldProperties = null;
     var allowedRegex = /^([a-zA-Z0-9]([a-zA-Z0-9.]*[a-zA-Z0-9])?)?$/;
+    var rmpRegex = /^([a-zA-Z]+:\/\/[-a-zA-Z0-9.\/_%=&:]+[a-zA-Z0-9\/&])?$/;
 
     $(".drawingArea").on("click", ".nodeTemplateSituation, .nodeTemplateOperation, .nodeTemplateContext, .nodeTemplateCondition", function() {
 
@@ -217,15 +218,16 @@ $(document).ready(function(){
 
             // Code to process save button click on the form
             $("#contextButton").click(function() {
-                var contextVal = $("#contextname").val();
                 var senTyp = $("#sensorType").val();
                 var unit = $("#unit").val();
-                var thing = $("#contextThing").val();
-                var rmp = $("#contextRMP").val();
                 var inputtype = $('#inputtype').val();
+                var rmp = inputtype == 'Situation'? $("#situationRmp").val() : $("#contextRMP").val();
+                var thing = inputtype == 'Situation'? $("#situationThing").val() : $("#contextThing").val();
+                var contextVal = inputtype == "Static" ? $("#staticSensor").val() : $("#contextSensor").val();
+                var template = $("#situationTemplate").val();
                 unit = unit == null ? "" : unit;
                 if (!(allowedRegex.test(contextVal) && allowedRegex.test(senTyp) && allowedRegex.test(unit) && allowedRegex.test(thing)
-                    && allowedRegex.test(rmp) && allowedRegex.test(inputtype))) {
+                    && rmpRegex.test(rmp) && allowedRegex.test(inputtype))) {
                     alert("Please make sure that all values consist of alphanumeric characters or '.'.\nThe first and the last character are not allowed to be '.'");
                     return;
                 }
@@ -236,8 +238,9 @@ $(document).ready(function(){
 
                 // Code to Change the name of the node to user entered name
 
+                name = inputtype == "Situation" ? (thing + "." + template) : contextVal;
                 var source = $(selected).attr("source");
-                selected.innerHTML = contextVal + "<div id='propertyDiv'/><span style='font-size:75%'>(Context Node)</span>";
+                selected.innerHTML = name + "<div id='propertyDiv'/><span style='font-size:75%'>(Context Node)</span>";
 
                 properties = selected.children[0];
                 if (inputtype.toLowerCase() == 'sensor' || inputtype == '') {
@@ -250,6 +253,11 @@ $(document).ready(function(){
                     properties.setAttribute("contextThing", thing);
                     properties.setAttribute("contextRMP", rmp);
                     properties.setAttribute('inputtype', 'static');
+                } else if (inputtype.toLowerCase() == 'situation') {
+                    properties.setAttribute("contextName", template);
+                    properties.setAttribute("situationThing", thing);
+                    properties.setAttribute("situationRMP", rmp);
+                    properties.setAttribute("inputtype", "situation");
                 }
 
                 $("#contextForm").addClass("hidden");
